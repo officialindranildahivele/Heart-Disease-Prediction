@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Heart Disease Prediction</title>
+<script src="https://cdn.tailwindcss.com"></script>
+
+<style>
+body{overflow-x:hidden}
+
+.glass{
+background:rgba(255,255,255,.08);
+backdrop-filter:blur(18px);
+-webkit-backdrop-filter:blur(18px);
+border:1px solid rgba(255,255,255,.15);
+}
+
+.floating-bg::before,
+.floating-bg::after{
+content:"";
+position:absolute;
+width:350px;
+height:350px;
+border-radius:9999px;
+filter:blur(90px);
+opacity:.35;
+animation:floatBlob 12s ease-in-out infinite;
+z-index:0;
+}
+
+.floating-bg::before{
+background:#06b6d4;
+top:-80px;
+left:-80px;
+}
+
+.floating-bg::after{
+background:#ec4899;
+bottom:-100px;
+right:-80px;
+animation-delay:3s;
+}
+
+@keyframes floatBlob{
+0%,100%{transform:translateY(0) translateX(0) scale(1)}
+50%{transform:translateY(-25px) translateX(20px) scale(1.08)}
+}
+
+.ecg-container{
+width:100%;
+overflow:hidden;
+height:80px;
+position:relative;
+}
+
+.ecg-line{
+position:absolute;
+width:200%;
+height:100%;
+animation:ecgMove 6s linear infinite;
+}
+
+@keyframes ecgMove{
+from{transform:translateX(0)}
+to{transform:translateX(-50%)}
+}
+
+.input-box{
+transition:.3s ease;
+}
+
+.input-box:focus{
+transform:scale(1.02);
+box-shadow:0 0 0 3px rgba(59,130,246,.25);
+}
+
+select,input{color:white}
+option{color:black}
+</style>
+</head>
+
+<body class="min-h-screen bg-gradient-to-br from-slate-950 via-blue-950 to-purple-950 text-white relative floating-bg">
+
+<!-- ECG LINE -->
+<div class="relative z-10 pt-6 px-6">
+<div class="max-w-7xl mx-auto">
+<div class="ecg-container opacity-80">
+<svg class="ecg-line" viewBox="0 0 1200 100">
+<polyline fill="none" stroke="#22c55e" stroke-width="3"
+points="0,50 60,50 90,50 110,20 130,80 150,50 210,50 240,50 260,10 280,90 300,50 360,50 420,50 450,50 470,15 490,85 510,50 570,50 630,50 660,50 680,20 700,80 720,50 780,50 840,50 870,50 890,12 910,88 930,50 990,50 1050,50 1080,50 1100,18 1120,82 1140,50 1200,50"/>
+</svg>
+</div>
+</div>
+</div>
+
+<div class="relative z-10 max-w-7xl mx-auto px-6 pb-10">
+
+<!-- HEADER -->
+<div class="flex flex-col md:flex-row justify-between items-center gap-6 mb-10">
+
+<div>
+<h1 class="text-5xl font-extrabold bg-gradient-to-r from-cyan-300 via-blue-300 to-pink-300 bg-clip-text text-transparent">
+Heart Disease Prediction
+</h1>
+<p class="text-white/70 mt-2 text-lg">
+Healthcare Dashboard
+</p>
+</div>
+
+<div class="flex gap-3 flex-wrap">
+<a href="/dashboard" class="glass px-5 py-3 rounded-2xl">Dashboard</a>
+<a href="/history" class="glass px-5 py-3 rounded-2xl">History</a>
+<a href="/logout" class="bg-red-500 px-5 py-3 rounded-2xl">Logout</a>
+</div>
+
+</div>
+
+<div class="grid lg:grid-cols-3 gap-8">
+
+<!-- LEFT -->
+<div class="glass rounded-3xl p-8">
+
+<h2 class="text-2xl font-bold mb-6 text-cyan-300">
+Upload Medical Report
+</h2>
+
+<input type="file" id="pdfFile" accept=".pdf"
+class="w-full p-4 rounded-2xl bg-white/10 border border-white/20">
+
+<button onclick="uploadPDF()" type="button"
+class="w-full mt-4 bg-cyan-400 text-slate-950 font-bold py-3 rounded-2xl">
+Read PDF & Autofill
+</button>
+
+<div class="mt-8 bg-green-500/10 border border-green-400/20 rounded-2xl p-5">
+<p class="text-white/70">Cardiac Signal</p>
+<p class="text-2xl text-green-300 font-bold mt-1">Monitoring Active</p>
+</div>
+
+</div>
+
+<!-- RIGHT -->
+<div class="lg:col-span-2 glass rounded-3xl p-8">
+
+<h2 class="text-3xl font-bold mb-6 text-pink-300">
+Clinical Input Form
+</h2>
+
+<form id="predictForm" class="grid md:grid-cols-2 gap-6">
+
+<input name="age" type="number" placeholder="Age" class="input-box p-4 rounded-2xl bg-white/10">
+
+<select name="sex" class="input-box p-4 rounded-2xl bg-white/10">
+<option value="">Sex</option>
+<option value="1">Male</option>
+<option value="0">Female</option>
+</select>
+
+<select name="cp" class="input-box p-4 rounded-2xl bg-white/10">
+<option value="0">Typical Angina</option>
+<option value="1">Atypical Angina</option>
+<option value="2">Non-anginal Pain</option>
+<option value="3">Asymptomatic</option>
+</select>
+
+<input name="trestbps" type="number" placeholder="Blood Pressure" class="input-box p-4 rounded-2xl bg-white/10">
+
+<input name="chol" type="number" placeholder="Cholesterol" class="input-box p-4 rounded-2xl bg-white/10">
+
+<select name="fbs" class="input-box p-4 rounded-2xl bg-white/10">
+<option value="1">FBS True</option>
+<option value="0">FBS False</option>
+</select>
+
+<select name="restecg" class="input-box p-4 rounded-2xl bg-white/10">
+<option value="0">Normal ECG</option>
+<option value="1">Abnormal ECG</option>
+<option value="2">LVH</option>
+</select>
+
+<input name="thalach" type="number" placeholder="Heart Rate" class="input-box p-4 rounded-2xl bg-white/10">
+
+<select name="exang" class="input-box p-4 rounded-2xl bg-white/10">
+<option value="1">Angina Yes</option>
+<option value="0">Angina No</option>
+</select>
+
+<input name="oldpeak" type="number" step="0.1" placeholder="Oldpeak" class="input-box p-4 rounded-2xl bg-white/10">
+
+<select name="slope" class="input-box p-4 rounded-2xl bg-white/10">
+<option value="0">Downsloping</option>
+<option value="1">Flat</option>
+<option value="2">Upsloping</option>
+</select>
+
+<input name="ca" type="number" placeholder="CA (0-4)" class="input-box p-4 rounded-2xl bg-white/10">
+
+<div class="md:col-span-2">
+<label class="block mb-2 text-white/80">Thal</label>
+
+<select name="thal"
+class="input-box w-full p-4 rounded-2xl bg-white/10 border border-white/20">
+
+<option value="0">Unknown</option>
+<option value="1">Normal</option>
+<option value="2">Fixed Defect</option>
+<option value="3">Reversible Defect</option>
+
+</select>
+</div>
+
+<button type="submit"
+class="md:col-span-2 bg-gradient-to-r from-green-400 via-cyan-400 to-blue-500 text-slate-950 font-bold text-xl py-4 rounded-2xl">
+Predict Heart Disease
+</button>
+
+</form>
+
+<!-- RESULTS SECTION -->
+<div id="resultContainer" class="md:col-span-2 mt-8 glass rounded-3xl p-8 hidden">
+
+<h3 class="text-2xl font-bold mb-4 text-center text-cyan-300">Prediction Result</h3>
+
+<div id="resultBox" class="rounded-2xl p-6 text-center mb-4">
+<p class="text-lg text-white/70 mb-2">Status:</p>
+<p id="resultText" class="text-5xl font-extrabold"></p>
+<p class="text-white/70 mt-4 text-xl">Confidence: <span id="confidenceText" class="font-bold text-cyan-300"></span></p>
+</div>
+
+<a id="downloadBtn" href="#" class="block w-full bg-blue-500 text-slate-950 font-bold py-3 rounded-2xl text-center mt-4">
+Download PDF Report
+</a>
+
+</div>
+
+</div>
+</div>
+</div>
+
+<script>
+document.getElementById("predictForm").addEventListener("submit", async function(e) {
+  e.preventDefault();
+  
+  let formData = new FormData(this);
+  
+  let res = await fetch("/predict", {
+    method: "POST",
+    body: formData,
+    headers: {
+      'X-Requested-With': 'XMLHttpRequest'
+    }
+  });
+  
+  let data = await res.json();
+  
+  // Display results
+  let resultContainer = document.getElementById("resultContainer");
+  let resultText = document.getElementById("resultText");
+  let confidenceText = document.getElementById("confidenceText");
+  let resultBox = document.getElementById("resultBox");
+  let downloadBtn = document.getElementById("downloadBtn");
+  
+  resultText.textContent = data.prediction;
+  confidenceText.textContent = data.confidence + "%";
+  downloadBtn.href = `/download_report/${data.prediction_id}`;
+  
+  if(data.prediction === "Risk") {
+    resultBox.className = "rounded-2xl p-6 text-center mb-4 bg-red-500/20 border border-red-400";
+    resultText.className = "text-5xl font-extrabold text-red-400";
+  } else {
+    resultBox.className = "rounded-2xl p-6 text-center mb-4 bg-green-500/20 border border-green-400";
+    resultText.className = "text-5xl font-extrabold text-green-400";
+  }
+  
+  resultContainer.classList.remove("hidden");
+  resultContainer.scrollIntoView({ behavior: "smooth" });
+});
+
+async function uploadPDF(){
+
+let file=document.getElementById("pdfFile").files[0];
+
+if(!file){
+alert("Select PDF first");
+return;
+}
+
+let fd=new FormData();
+fd.append("pdf",file);
+
+let res=await fetch("/upload_pdf",{
+method:"POST",
+body:fd
+});
+
+let data=await res.json();
+
+for(let key in data){
+
+let el=document.querySelector(`[name="${key}"]`);
+
+if(el && data[key] !== ""){
+
+if(el.tagName==="SELECT"){
+
+el.value=String(data[key]);
+
+el.dispatchEvent(new Event("change"));
+el.blur();
+el.focus();
+el.blur();
+
+}else{
+el.value=data[key];
+}
+
+}
+}
+
+console.log(data);
+}
+</script>
+
+</body>
+</html>

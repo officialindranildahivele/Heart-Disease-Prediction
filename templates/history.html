@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Prediction History</title>
+<script src="https://cdn.tailwindcss.com"></script>
+
+<style>
+.glass{
+background:rgba(255,255,255,.08);
+backdrop-filter:blur(18px);
+border:1px solid rgba(255,255,255,.15)
+}
+</style>
+</head>
+
+<body class="min-h-screen bg-gradient-to-br from-slate-950 via-blue-950 to-purple-950 text-white">
+
+<div class="max-w-7xl mx-auto px-6 py-8">
+
+<div class="flex flex-col md:flex-row justify-between items-center gap-5 mb-8">
+
+<div>
+<h1 class="text-5xl font-extrabold bg-gradient-to-r from-cyan-300 via-blue-300 to-pink-300 bg-clip-text text-transparent">
+Prediction History
+</h1>
+<p class="text-white/70 mt-2">Stored AI cardiac assessments</p>
+</div>
+
+<div class="flex gap-3 flex-wrap">
+<a href="/home" class="glass px-5 py-3 rounded-2xl">Home</a>
+<a href="/dashboard" class="glass px-5 py-3 rounded-2xl">Dashboard</a>
+<a href="/logout" class="bg-red-500 px-5 py-3 rounded-2xl">Logout</a>
+</div>
+
+</div>
+
+<div class="glass rounded-3xl p-6 overflow-x-auto">
+
+<table class="w-full text-left border-collapse">
+
+<thead>
+<tr class="border-b border-white/20 text-white/80">
+<th class="p-4">ID</th>
+<th class="p-4">Age</th>
+<th class="p-4">Result</th>
+<th class="p-4">Confidence</th>
+<th class="p-4">Date</th>
+<th class="p-4">Report</th>
+</tr>
+</thead>
+
+<tbody>
+
+{% for row in records %}
+<tr class="border-b border-white/10 hover:bg-white/10">
+
+<td class="p-4">{{ row[0] }}</td>
+
+<td class="p-4">{{ "%.0f"|format(row[1]) }}</td>
+
+<td class="p-4">
+{% if row[2] == "Risk" %}
+<span class="bg-red-500 px-4 py-1 rounded-full font-semibold">
+{{ row[2] }}
+</span>
+{% else %}
+<span class="bg-green-500 px-4 py-1 rounded-full font-semibold">
+{{ row[2] }}
+</span>
+{% endif %}
+</td>
+
+<td class="p-4">{{ "%.2f"|format(row[3]) }}%</td>
+
+<td class="p-4">{{ row[4].split(' ')[0] }}</td>
+
+<td class="p-4">
+<a href="/download_report/{{ row[0] }}"
+class="bg-blue-500 px-4 py-2 rounded-xl">
+Download PDF
+</a>
+</td>
+
+</tr>
+{% endfor %}
+
+</tbody>
+</table>
+
+{% if records|length == 0 %}
+<div class="text-center py-12 text-xl text-white/70">
+No prediction history found.
+</div>
+{% endif %}
+
+</div>
+
+</div>
+
+</body>
+</html>

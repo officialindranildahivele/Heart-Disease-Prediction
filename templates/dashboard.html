@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Dashboard</title>
+<script src="https://cdn.tailwindcss.com"></script>
+
+<style>
+.glass{
+background:rgba(255,255,255,.08);
+backdrop-filter:blur(18px);
+border:1px solid rgba(255,255,255,.15)
+}
+</style>
+</head>
+
+<body class="min-h-screen bg-gradient-to-br from-slate-950 via-blue-950 to-purple-950 text-white">
+
+<div class="max-w-6xl mx-auto px-6 py-8">
+
+<div class="flex flex-col md:flex-row justify-between items-center gap-5 mb-10">
+<div>
+<h1 class="text-5xl font-extrabold bg-gradient-to-r from-cyan-300 via-blue-300 to-pink-300 bg-clip-text text-transparent">
+Dashboard
+</h1>
+<p class="text-white/70 mt-2">AI Prediction Analytics</p>
+</div>
+
+<div class="flex gap-3 flex-wrap">
+<a href="/home" class="glass px-5 py-3 rounded-2xl">Home</a>
+<a href="/history" class="glass px-5 py-3 rounded-2xl">History</a>
+<a href="/logout" class="bg-red-500 px-5 py-3 rounded-2xl">Logout</a>
+</div>
+</div>
+
+<div class="grid md:grid-cols-3 gap-6">
+
+<div class="glass p-8 rounded-3xl text-center">
+<h2 class="text-2xl text-cyan-300 font-bold">Total Predictions</h2>
+<p class="text-6xl mt-4 font-extrabold">{{ total }}</p>
+</div>
+
+<div class="glass p-8 rounded-3xl text-center border border-red-400/20">
+<h2 class="text-2xl text-red-400 font-bold">Risk Cases</h2>
+<p class="text-6xl mt-4 font-extrabold">{{ risk }}</p>
+</div>
+
+<div class="glass p-8 rounded-3xl text-center border border-green-400/20">
+<h2 class="text-2xl text-green-400 font-bold">Safe Cases</h2>
+<p class="text-6xl mt-4 font-extrabold">{{ safe }}</p>
+</div>
+
+</div>
+
+<div class="mt-10 glass p-8 rounded-3xl">
+<h3 class="text-3xl font-bold text-pink-300 mb-4">Summary</h3>
+<p class="text-white/80 leading-8 text-lg">
+This dashboard shows your heart disease prediction history,
+including total predictions, high risk outcomes, and safe results.
+Useful for analytics, demo presentation, and project viva.
+</p>
+</div>
+
+</div>
+
+</body>
+</html>

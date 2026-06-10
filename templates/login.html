@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Login</title>
+<script src="https://cdn.tailwindcss.com"></script>
+
+<style>
+.glass{
+background:rgba(255,255,255,.08);
+backdrop-filter:blur(18px);
+border:1px solid rgba(255,255,255,.15)
+}
+</style>
+</head>
+
+<body class="min-h-screen bg-gradient-to-br from-slate-950 via-blue-950 to-purple-950 text-white flex items-center justify-center px-6">
+
+<div class="glass rounded-3xl shadow-2xl p-10 w-full max-w-md">
+
+<div class="text-center mb-8">
+<h1 class="text-4xl font-extrabold bg-gradient-to-r from-cyan-300 via-blue-300 to-pink-300 bg-clip-text text-transparent">
+Login
+</h1>
+<p class="text-white/70 mt-2">Access AI Healthcare Dashboard</p>
+</div>
+
+{% if error %}
+<div class="mb-4 bg-red-500/20 border border-red-300 text-red-100 p-3 rounded-xl">
+{{ error }}
+</div>
+{% endif %}
+
+<form method="POST" class="space-y-5">
+
+<input type="text"
+name="username"
+placeholder="Username"
+required
+class="w-full p-4 rounded-2xl bg-white/10 border border-white/20 outline-none">
+
+<input type="password"
+name="password"
+placeholder="Password"
+required
+class="w-full p-4 rounded-2xl bg-white/10 border border-white/20 outline-none">
+
+<button type="submit"
+class="w-full bg-gradient-to-r from-cyan-400 via-blue-400 to-pink-400 text-slate-950 font-bold p-4 rounded-2xl">
+Login
+</button>
+
+</form>
+
+<p class="text-center mt-6 text-white/80">
+Don't have an account?
+<a href="/register" class="text-yellow-300 font-semibold">
+Register
+</a>
+</p>
+
+</div>
+
+</body>
+</html>
